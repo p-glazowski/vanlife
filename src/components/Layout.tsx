@@ -6,7 +6,7 @@ export default function Layout() {
   return (
     <div className="flex h-dvh flex-col justify-between">
       <Header />
-      <main className="h-full border-2 border-green-500">
+      <main className="h-full">
         <Outlet />
       </main>
       <Footer />

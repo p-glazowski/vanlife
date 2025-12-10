@@ -3,7 +3,7 @@ import nightVan from "/nightVan.png";
 
 export default function About() {
   return (
-    <div className="bg-my-beige">
+    <div className="bg-my-beige h-full">
       <div className="h-75">
         <img
           src={nightVan}
