@@ -1,56 +1,68 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { Link, Navigate, useLocation } from "react-router";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../API/Api";
 import { useAuthContext } from "../providers/AuthProvider";
 
-interface LoginProps {
+interface User {
   email: string;
   password: string;
 }
 
 interface ErrorProps {
-  emailError?: string;
-  passwordError?: string;
+  email?: string;
+  password?: string;
+  fb?: string;
 }
 
 export default function Login() {
-  const { user, handleLogin } = useAuthContext();
   const location = useLocation();
-  const navigate = useNavigate();
   const from = location.state?.from.pathname || "/";
+  const [user, setUser] = useState<User>({ email: "", password: "" });
+  const [logging, setLogging] = useState(false);
+  const [errors, setErrors] = useState<ErrorProps>({});
+  const { loggedUser, loading } = useAuthContext();
+  console.log(auth?.currentUser?.email);
 
-  const [loginError, setLoginError] = useState<ErrorProps>({});
-
-  function getData(e: React.FormEvent<HTMLFormElement>) {
+  async function SignIn(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData) as Record<string, string>;
-    const loginData: LoginProps = {
-      email: data.email || "",
-      password: data.password || "",
-    };
 
     const newErrors: ErrorProps = {};
     /* { [key: string]: string } */
 
-    if (loginData.email === "") {
-      newErrors.emailError = "Please fill the email adress";
+    if (user.email === "") {
+      newErrors.email = "Please fill the email adress";
     }
 
-    if (loginData.password === "") {
-      newErrors.passwordError = "Please fill the password";
+    if (user.password === "") {
+      newErrors.password = "Please fill the password";
     }
 
     const hasError = Object.keys(newErrors).length > 0;
 
     if (hasError) {
-      setLoginError(newErrors);
+      setErrors(newErrors);
       return;
     }
 
-    setLoginError({});
-    console.log("SENT");
-    handleLogin({ ...loginData, userId: "123" });
-    navigate(from, { replace: true });
+    setErrors({});
+    try {
+      setLogging(true);
+      await signInWithEmailAndPassword(auth, user.email, user.password);
+    } catch (err: any) {
+      console.error(err);
+      console.log(err.code);
+      if (err.code === "auth/invalid-credential") {
+        setErrors((pS) => ({ ...pS, fb: "Wrong password" }));
+      }
+    } finally {
+      setLogging(false);
+    }
+  }
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.currentTarget;
+    setUser((pS) => ({ ...pS, [name]: value }));
   }
 
   /*  if (user.email)
@@ -70,16 +82,21 @@ export default function Login() {
       </div>
     ); */
 
+  if (loading) return <p>LOADING..</p>;
+
+  if (loggedUser) return <Navigate to="/host" replace />;
+
   return (
     <div className="bg-my-beige flex flex-1 flex-col gap-15 px-10 py-15">
       {location.state?.auth && (
         <p className="text-center text-red-500">{location.state.auth}</p>
       )}
       <h1 className="text-center text-3xl font-bold">Sign in to your accout</h1>
-      <form className="flex flex-col gap-3" onSubmit={getData}>
+      <form className="flex flex-col gap-3" onSubmit={SignIn}>
         <label htmlFor="email" className="flex flex-col gap-1">
           <span>Email:</span>
           <input
+            onChange={handleChange}
             type="email"
             name="email"
             id="email"
@@ -87,12 +104,13 @@ export default function Login() {
             className="outline-my-orange w-full rounded-md border border-gray-400 bg-white p-2 pl-3 placeholder:text-gray-400"
           />
         </label>
-        {loginError.emailError && (
-          <p className="text-xs text-red-500">{loginError.emailError}</p>
+        {errors?.email && (
+          <p className="text-xs text-red-500">{errors.email}</p>
         )}
         <label htmlFor="password" className="flex flex-col gap-1">
           <span>Password:</span>
           <input
+            onChange={handleChange}
             type="password"
             name="password"
             id="password"
@@ -100,13 +118,17 @@ export default function Login() {
             className="outline-my-orange w-full rounded-md border border-gray-400 bg-white p-2 pl-3 placeholder:text-gray-400"
           />
         </label>
-        {loginError.passwordError && (
-          <p className="text-xs text-red-500">{loginError.passwordError}</p>
+        {errors?.password && (
+          <p className="text-xs text-red-500">{errors.password}</p>
         )}
+        {errors?.fb && <p className="text-xs text-red-500">{errors.fb}</p>}
         <button className="bg-my-orange mt-5 rounded-md p-4 text-white">
-          Log in
+          {logging ? "Logging..." : "Log in"}
         </button>
       </form>
+      <div className="text-center underline underline-offset-2 hover:font-bold">
+        <Link to="/register">Don't have an account? Register now!</Link>
+      </div>
     </div>
   );
 }

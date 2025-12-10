@@ -18,6 +18,7 @@ import WrongPage from "./pages/WrongPage";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthProvider from "./providers/AuthProvider";
+import Register from "./pages/Register";
 
 export default function App() {
   return (
@@ -44,6 +45,7 @@ export default function App() {
               <Route path="about" element={<About />} />
               <Route path="vans" element={<Vans />} />
               <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
               <Route path="vans/:id" element={<Van />} />
               <Route path="*" element={<WrongPage />} />
             </Route>

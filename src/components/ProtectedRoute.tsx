@@ -1,11 +1,16 @@
 import { Navigate, Outlet, useLocation } from "react-router";
+import { auth } from "../API/Api";
 import { useAuthContext } from "../providers/AuthProvider";
 
 export default function ProtectedRoute() {
-  const { user } = useAuthContext();
   const location = useLocation();
+  const { loggedUser, loading } = useAuthContext();
 
-  return user.email ? (
+  if (loading) {
+    <p>Loading...</p>;
+  }
+
+  return loggedUser ? (
     <Outlet />
   ) : (
     <Navigate

@@ -20,8 +20,8 @@ export default function HostLayout() {
   };
 
   const { vans, loading, error } = useVans();
-  const { user } = useAuthContext();
-  const hostId = user.userId;
+
+  const hostId = "123";
 
   const myVans = vans.filter((van) => van.hostId === hostId);
   console.log(myVans);

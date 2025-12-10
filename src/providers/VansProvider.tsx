@@ -33,7 +33,6 @@ export default function VansProvider({ children }: VansProviderProps) {
         if (!res.ok) throw new Error("Cannot fetch the data");
         const data = await res.json(); */
         const data = await getVans();
-        console.log(data);
         setVans(data);
       } catch (e) {
         setError((e as Error).message);

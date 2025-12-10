@@ -1,22 +1,42 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
+import { auth } from "../API/Api";
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-const AuthContext = createContext(undefined);
+interface ContextProps {
+  loggedUser: User | null;
+  loading: boolean;
+}
+
+const AuthContext = createContext<ContextProps | undefined>(undefined);
 
 export { AuthContext };
 
 export default function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState({});
+  const [loggedUser, setLoggedUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  function handleLogin(creds) {
-    setUser(creds);
-  }
+  useEffect(() => {
+    console.log("Running useEffect!");
+    const authStateChange = onAuthStateChanged(auth, (user) => {
+      setLoggedUser(user);
+      setLoading(false);
+    });
+
+    return () => authStateChange();
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, handleLogin }}>
+    <AuthContext.Provider value={{ loggedUser, loading }}>
       {children}
     </AuthContext.Provider>
   );

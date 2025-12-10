@@ -2,6 +2,9 @@ import { NavLink, Link } from "react-router";
 import burger from "/burger.svg";
 import user from "/user.svg";
 import { type Dispatch, type SetStateAction } from "react";
+import { useAuthContext } from "../../providers/AuthProvider";
+import { signOut } from "firebase/auth";
+import { auth } from "../../API/Api";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -9,6 +12,8 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ isOpen, setIsOpen }: MobileMenuProps) {
+  const { loggedUser, loading } = useAuthContext();
+
   return (
     <nav className="flex flex-row items-center gap-8">
       {isOpen && (
@@ -56,18 +61,29 @@ export default function MobileMenu({ isOpen, setIsOpen }: MobileMenuProps) {
           </ul>
         </div>
       )}
-      <Link
-        to="login"
-        onClick={() => {
-          setIsOpen(false);
-        }}
-      >
-        <div className="w-5">
-          <img src={user} alt="user logo" />
-        </div>
-      </Link>
+      {!loggedUser ? (
+        <Link
+          to="login"
+          onClick={() => {
+            setIsOpen(false);
+          }}
+        >
+          <div className="w-5">
+            <img src={user} alt="user logo" />
+          </div>
+        </Link>
+      ) : (
+        <button
+          className="cursor-pointer text-sm"
+          onClick={() => {
+            signOut(auth);
+          }}
+        >
+          Log out
+        </button>
+      )}
       <button
-        className="w-7"
+        className="w-7 cursor-pointer"
         onClick={() => {
           setIsOpen((pS) => !pS);
         }}

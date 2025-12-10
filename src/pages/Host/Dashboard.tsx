@@ -1,6 +1,7 @@
 import SingleVan from "../../components/SingleVan";
 import { Link } from "react-router";
 import { useOwnedVans } from "../../components/HostLayout";
+import { auth } from "../../API/Api";
 
 export default function Dashboard() {
   const { myVans, loading, error } = useOwnedVans();
@@ -9,7 +10,9 @@ export default function Dashboard() {
   return (
     <>
       <div className="bg-my-dark-beige flex flex-1 flex-col gap-4 p-4">
-        <h2 className="text-2xl font-bold">Welcome!</h2>
+        <h2 className="mb-10 text-2xl font-bold">
+          Welcome {auth?.currentUser?.email}!
+        </h2>
         <div className="flex flex-row items-center justify-between">
           <p className="text-sm text-gray-500">
             Income last{" "}
