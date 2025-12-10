@@ -4,14 +4,12 @@ import Header from "./Header";
 
 export default function Layout() {
   return (
-    <div className="rounded-md bg-white p-2">
-      <div className="overflow-hidden rounded-md">
-        <Header />
-        <main>
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
+    <div className="flex h-dvh flex-col justify-between">
+      <Header />
+      <main className="h-full border-2 border-green-500">
+        <Outlet />
+      </main>
+      <Footer />
     </div>
   );
 }
