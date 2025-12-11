@@ -21,11 +21,13 @@ export default function HostLayout() {
   };
 
   const { loading, error, hostVans, loadHostVans } = useVans();
-  const { profile } = useAuthContext();
+  const { profile, loading: authLoading } = useAuthContext();
 
   useEffect(() => {
-    if (profile.id) loadHostVans(profile.id);
-  }, [profile.id, loadHostVans]);
+    if (profile?.id) loadHostVans(profile.id);
+  }, [profile?.id, loadHostVans]);
+
+  if (authLoading) return <p>Loading...</p>;
 
   return (
     <>

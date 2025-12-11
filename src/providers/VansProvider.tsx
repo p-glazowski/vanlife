@@ -19,6 +19,7 @@ interface VansContextProps {
   error: string | null;
   hostVans: Van[];
   loadHostVans: (id: string) => Promise<void>;
+  getData: () => void;
 }
 
 const VansContext = createContext<VansContextProps | undefined>(undefined);
@@ -30,22 +31,22 @@ export default function VansProvider({ children }: VansProviderProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function getData() {
-      try {
-        setLoading(true);
-        /* const res = await fetch(url);
+  async function getData() {
+    try {
+      setLoading(true);
+      /* const res = await fetch(url);
         if (!res.ok) throw new Error("Cannot fetch the data");
         const data = await res.json(); */
-        const data = await getVans();
-        setVans(data);
-      } catch (e) {
-        setError((e as Error).message);
-      } finally {
-        setLoading(false);
-      }
+      const data = await getVans();
+      setVans(data);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setLoading(false);
     }
+  }
 
+  useEffect(() => {
     getData();
   }, []);
 
@@ -58,7 +59,7 @@ export default function VansProvider({ children }: VansProviderProps) {
 
   return (
     <VansContext.Provider
-      value={{ vans, loading, error, hostVans, loadHostVans }}
+      value={{ getData, vans, loading, error, hostVans, loadHostVans }}
     >
       {children}
     </VansContext.Provider>

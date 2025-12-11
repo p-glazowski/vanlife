@@ -37,6 +37,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       if (!user) {
         setProfile(null);
         setLoading(false);
+        console.log("User not logged");
         return;
       }
 

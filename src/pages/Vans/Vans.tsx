@@ -1,12 +1,13 @@
 import SingleVanItem from "../../components/SingleVanItem";
 import { Link, useSearchParams } from "react-router";
 import { useVans } from "../../providers/VansProvider";
+import { useEffect } from "react";
 
 export default function Vans() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   //
-  const { vans, loading, error } = useVans();
+  const { vans, loading, error, getData } = useVans();
 
   if (error) console.log("THIS IS THE ERROR WITH FETCHING DATA:", error);
 
@@ -14,6 +15,10 @@ export default function Vans() {
 
   const filteredVans = type ? vans.filter((item) => item.type === type) : vans;
   const vanTypes = getAllTypes();
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   //OLD FUNCTION WITH BUTTONS
   /*   function handleFilter(name: "simple" | "luxury" | "rugged") {
