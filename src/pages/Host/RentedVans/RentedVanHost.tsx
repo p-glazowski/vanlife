@@ -7,6 +7,8 @@ import {
 } from "react-router";
 import type { Van } from "../../../types/types";
 import { useOwnedVans } from "../../../components/HostLayout";
+import { useEffect, useState } from "react";
+import { showImages } from "../../../API/Api";
 
 interface OutletContextProps {
   van: Van;
@@ -14,6 +16,7 @@ interface OutletContextProps {
 
 export default function RentedVanHost() {
   const { hostVans, loading, error } = useOwnedVans();
+  const [image, setImage] = useState<string | null>(null);
 
   if (error) console.log("Error:", error);
   const { id } = useParams();
@@ -24,6 +27,14 @@ export default function RentedVanHost() {
     fontWeight: "600",
     color: "black",
   };
+
+  useEffect(() => {
+    async function loadImage() {
+      const img = await showImages(van?.id);
+      setImage(img);
+    }
+    loadImage();
+  }, [van?.id]);
 
   return (
     <div className="bg-my-beige flex flex-1 flex-col gap-8 p-4 py-8">
@@ -37,11 +48,18 @@ export default function RentedVanHost() {
         <div className="flex flex-col gap-5 rounded-md bg-white p-4">
           <div className="flex flex-row items-center gap-4">
             <div className="h-25 w-25">
-              <img
-                src={van?.imageUrl}
-                alt=""
-                className="h-full w-full rounded-md object-cover"
-              />
+              {!image && (
+                <div className="flex h-full w-full items-center justify-center">
+                  ?
+                </div>
+              )}
+              {image && (
+                <img
+                  src={image}
+                  alt="Van Image"
+                  className="h-full w-full rounded-md object-cover"
+                />
+              )}
             </div>
             <div className="flex flex-col gap-1">
               <div>

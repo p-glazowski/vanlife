@@ -25,7 +25,7 @@ export default function HostLayout() {
 
   useEffect(() => {
     if (profile?.id) loadHostVans(profile.id);
-  }, [profile?.id, loadHostVans]);
+  }, [profile?.id]);
 
   if (authLoading) return <p>Loading...</p>;
 

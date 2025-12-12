@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { type Van } from "../types/types";
+import { getDownloadURL, getStorage, listAll, ref } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -73,3 +74,13 @@ export async function getUserDetails(id: string) {
 
 //AUTH
 export const auth = getAuth(app);
+
+//STORE
+export const storage = getStorage(app);
+
+export async function showImages(vanId) {
+  const imageListRef = ref(storage, `vansphotos/van-${vanId}`);
+  const res = await listAll(imageListRef);
+  const list = await Promise.all(res.items.map(getDownloadURL));
+  return list;
+}
