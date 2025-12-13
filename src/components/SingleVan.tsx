@@ -7,7 +7,7 @@ interface SingleVanProps {
 }
 
 export default function SingleVan({ van }: SingleVanProps) {
-  const [image, setImage] = useState();
+  const [image, setImage] = useState<string>();
 
   useEffect(() => {
     async function loadImage() {

@@ -16,7 +16,7 @@ interface OutletContextProps {
 
 export default function RentedVanHost() {
   const { hostVans, loading, error } = useOwnedVans();
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string>();
 
   if (error) console.log("Error:", error);
   const { id } = useParams();
@@ -30,8 +30,9 @@ export default function RentedVanHost() {
 
   useEffect(() => {
     async function loadImage() {
+      if (!van?.id) return;
       const img = await showImages(van?.id);
-      setImage(img);
+      setImage(img[0]);
     }
     loadImage();
   }, [van?.id]);

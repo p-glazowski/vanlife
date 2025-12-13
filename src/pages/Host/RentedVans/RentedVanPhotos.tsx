@@ -117,7 +117,8 @@ export default function RentedVanPhotos() {
               id="file"
               className="hidden"
               onChange={(e) => {
-                setFile(e.target.files[0]);
+                const selectedFile = e.target.files?.[0] ?? null;
+                setFile(selectedFile);
               }}
             />
           </div>

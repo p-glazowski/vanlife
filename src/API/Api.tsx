@@ -78,7 +78,7 @@ export const auth = getAuth(app);
 //STORE
 export const storage = getStorage(app);
 
-export async function showImages(vanId) {
+export async function showImages(vanId: string): Promise<string[]> {
   const imageListRef = ref(storage, `vansphotos/van-${vanId}`);
   const res = await listAll(imageListRef);
   const list = await Promise.all(res.items.map(getDownloadURL));
