@@ -129,12 +129,7 @@ export default function Vans() {
               key={van.id}
               state={{ search: searchParams.toString(), type: type }}
             >
-              <SingleVanItem
-                name={van.name}
-                imageUrl={van.imageUrl}
-                price={van.price}
-                type={van.type}
-              />
+              <SingleVanItem van={van} />
             </Link>
           ))}
         </div>

@@ -1,8 +1,12 @@
 import { Link, useLocation, useParams } from "react-router";
 import { type Van } from "../../types/types";
 import { useVans } from "../../providers/VansProvider";
+import { useEffect, useState } from "react";
+import { showImages } from "../../API/Api";
 
 export default function Van() {
+  const [images, setImages] = useState<string[]>([]);
+  const [currentImg, setCurrentImg] = useState(0);
   const location = useLocation();
   const search = `?${location.state?.search}` || "";
   /*   const searchName = search
@@ -22,6 +26,18 @@ export default function Van() {
   const { id } = useParams();
 
   const van = vans.find((item) => item.id.toLocaleString() === id);
+
+  useEffect(() => {
+    async function loadImages() {
+      if (!id) return;
+      const imgs = await showImages(id);
+      setImages(imgs);
+    }
+
+    loadImages();
+  }, []);
+
+  console.log(images);
 
   if (loading) {
     return <p className="bg-my-beige py-10 text-center">LOADING....🚐</p>;
@@ -53,10 +69,22 @@ export default function Van() {
         <div className="flex flex-col gap-8">
           <div className="overflow-hidden rounded-md">
             <img
-              src={van.imageUrl}
+              src={images[currentImg]}
               alt="Van image"
               className="h-full w-full object-cover"
             />
+          </div>
+          <div className="flex flex-row flex-wrap gap-5">
+            {images.map((url, i) => (
+              <button
+                className={`${currentImg === i ? "shadow-my-orange shadow-[0px_0px_5px_3px]" : ""} cursor-pointer overflow-hidden rounded-md`}
+                onClick={() => {
+                  setCurrentImg(i);
+                }}
+              >
+                <img src={url} alt="" className="h-30 w-30" />
+              </button>
+            ))}
           </div>
           <div className="flex flex-col gap-3">
             <div>
