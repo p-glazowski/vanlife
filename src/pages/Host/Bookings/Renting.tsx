@@ -23,8 +23,6 @@ export default function Renting() {
     }
   }, []);
 
-  if (rentedVans.length === 0) return;
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
