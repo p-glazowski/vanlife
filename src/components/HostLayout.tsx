@@ -88,9 +88,11 @@ export default function HostLayout() {
           Bookings
         </NavLink>
       </nav>
-      <Outlet
-        context={{ hostVans, loading, error } satisfies OutletContextProps}
-      />
+      <main className="flex-1">
+        <Outlet
+          context={{ hostVans, loading, error } satisfies OutletContextProps}
+        />
+      </main>
     </>
   );
 }

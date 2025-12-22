@@ -3,14 +3,14 @@ import { Link } from "react-router";
 export default function Home() {
   return (
     <div
-      id="holder"
-      className="relative flex flex-1 flex-col items-center justify-center"
+      className="relative flex min-h-dvh flex-col items-center justify-center bg-cover bg-top"
+      style={{ backgroundImage: "url(/mountainBg.png)" }}
     >
-      <div className="absolute top-0 bottom-0 z-0 w-full bg-black opacity-60"></div>
+      <div className="absolute inset-0 z-0 bg-black opacity-60"></div>
       <div className="relative flex flex-col gap-10 p-6 py-20 text-white">
         <h1 className="text-4xl font-bold">
           You got the travel plans, <br />
-          we got the travel vans.
+          We got the travel <span className="text-my-orange">vans</span>.
         </h1>
         <div className="text-gray-300">
           <p>Add adventure to your life by joining the #vanlife movement</p>
@@ -27,6 +27,3 @@ export default function Home() {
     </div>
   );
 }
-
-/* const vans = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      console.log("Vans from firestore:", vans); */
