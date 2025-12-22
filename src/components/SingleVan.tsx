@@ -27,7 +27,7 @@ export default function SingleVan({ van }: SingleVanProps) {
           <p className="text-sm text-gray-500">${van.price}/day</p>
         </div>
       </div>
-      <p>Edit</p>
+      <p className="text-my-orange">Edit</p>
     </div>
   );
 }

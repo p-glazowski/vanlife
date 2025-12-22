@@ -1,5 +1,5 @@
-import { useVans } from "../../providers/VansProvider";
-import type { BookingFirebase } from "../../types/types";
+import { useVans } from "../../../providers/VansProvider";
+import type { BookingFirebase } from "../../../types/types";
 import { format } from "date-fns";
 
 interface SingleBookedVanProps {
@@ -32,15 +32,29 @@ export default function SingleBookedVan({
       <div>
         {format(start, "dd.MM.yyyy")} - {format(end, "dd.MM.yyyy")}
       </div>
-      <div>STATUS: {bookedVan.status}</div>
-      <button
-        className="rounded-md bg-red-500 p-1 px-2 text-white"
-        onClick={() => {
-          handleCancelAction(bookedVan.id);
-        }}
+      <div
+        className={`font-bold ${
+          bookedVan.status === "pending"
+            ? "text-orange-500"
+            : bookedVan.status === "canceled"
+              ? "text-red-500"
+              : bookedVan.status === "accepted"
+                ? "text-green-500"
+                : "text-gray-500"
+        }`}
       >
-        Cancel
-      </button>
+        STATUS: {bookedVan.status.toUpperCase()}
+      </div>
+      {bookedVan.status === "pending" && (
+        <button
+          className="cursor-pointer rounded-md bg-red-500 p-1 px-2 text-white"
+          onClick={() => {
+            handleCancelAction(bookedVan.id);
+          }}
+        >
+          Cancel
+        </button>
+      )}
     </div>
   );
 }

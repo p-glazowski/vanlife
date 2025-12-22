@@ -29,7 +29,7 @@ export default function MobileMenu({ isOpen, setIsOpen }: MobileMenuProps) {
                   `hover:underline hover:opacity-70 active:font-bold ${isActive ? "font-bold" : ""}`
                 }
               >
-                Host
+                User
               </NavLink>
             </li>
             <li>

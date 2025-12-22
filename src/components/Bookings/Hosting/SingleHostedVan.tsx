@@ -1,0 +1,84 @@
+import { useVans } from "../../../providers/VansProvider";
+import type { BookingFirebase } from "../../../types/types";
+import { format } from "date-fns";
+
+interface SingleBookedVanProps {
+  bookedVan: BookingFirebase;
+  handleAccept: (bookingId: string) => void;
+  handleCancel: (bookingId: string) => void;
+}
+
+export default function SingleHostedVan({
+  bookedVan,
+  handleAccept,
+  handleCancel,
+}: SingleBookedVanProps) {
+  const { vans } = useVans();
+  const foundVan = vans.find((van) => van.id === bookedVan.vanId);
+  const start = bookedVan.startDate.toDate();
+  const end = bookedVan.endDate.toDate();
+
+  if (!foundVan?.photos)
+    return <div className="w-full rounded-md bg-white p-8">Loading...</div>;
+
+  return (
+    <div className="flex flex-row items-center justify-between gap-5 rounded-md border bg-white p-4 shadow-sm">
+      <div className="max-h-20 min-h-full max-w-30 overflow-hidden rounded-md">
+        <img
+          src={foundVan?.photos[0]}
+          alt="Van image"
+          className="h-full w-full object-cover object-top"
+        />
+      </div>
+      <h3 className="font-bold">{foundVan?.name}</h3>
+      <div>
+        {format(start, "dd.MM.yyyy")} - {format(end, "dd.MM.yyyy")}
+      </div>
+      <div
+        className={`font-bold ${
+          bookedVan.status === "pending"
+            ? "text-orange-500"
+            : bookedVan.status === "canceled"
+              ? "text-red-500"
+              : bookedVan.status === "accepted"
+                ? "text-green-500"
+                : "text-gray-500"
+        }`}
+      >
+        STATUS: {bookedVan.status.toUpperCase()}
+      </div>
+      {bookedVan.status === "accepted" && (
+        <div>
+          <button
+            className="cursor-pointer rounded-md bg-red-500 p-1 px-2 text-white"
+            onClick={() => {
+              handleCancel(bookedVan.id);
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      )}
+      {bookedVan.status === "pending" && (
+        <div className="flex flex-row gap-5 text-2xl">
+          <button
+            className="cursor-pointer"
+            onClick={() => {
+              handleAccept(bookedVan.id);
+            }}
+          >
+            ✅
+          </button>
+          <button
+            className="cursor-pointer"
+            onClick={() => {
+              handleCancel(bookedVan.id);
+            }}
+          >
+            ❌
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

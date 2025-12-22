@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { getRentedVans } from "../API/Api";
+import { getHostedVans, getRentedVans } from "../API/Api";
 import type { BookingFirebase } from "../types/types";
 
 interface BookingsProviderProps {
@@ -8,7 +8,9 @@ interface BookingsProviderProps {
 
 interface ContextProps {
   getRentedVansData: (userId: string) => void;
+  getHostedVansData: (userId: string) => void;
   rentedVans: BookingFirebase[];
+  hostedVans: BookingFirebase[];
 }
 
 const BookingsContext = createContext<ContextProps | undefined>(undefined);
@@ -17,6 +19,7 @@ export { BookingsContext };
 
 export default function BookingsProvider({ children }: BookingsProviderProps) {
   const [rentedVans, setRentedVans] = useState<BookingFirebase[]>([]);
+  const [hostedVans, setHostedVans] = useState<BookingFirebase[]>([]);
 
   async function getRentedVansData(id: string) {
     try {
@@ -27,8 +30,19 @@ export default function BookingsProvider({ children }: BookingsProviderProps) {
     }
   }
 
+  async function getHostedVansData(id: string) {
+    try {
+      const data = await getHostedVans(id);
+      setHostedVans(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
-    <BookingsContext.Provider value={{ getRentedVansData, rentedVans }}>
+    <BookingsContext.Provider
+      value={{ getRentedVansData, rentedVans, getHostedVansData, hostedVans }}
+    >
       {children}
     </BookingsContext.Provider>
   );

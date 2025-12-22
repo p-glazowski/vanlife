@@ -6,6 +6,7 @@ import { db } from "../../API/Api";
 export default function Details() {
   const { profile, setProfile } = useAuthContext();
   const [editing, setEditing] = useState(false);
+  const [error, setError] = useState(false);
   const [details, setDetails] = useState({
     name: profile.name,
     phone: profile.phone,
@@ -19,6 +20,13 @@ export default function Details() {
   async function handleUpdate() {
     const ref = doc(db, "users", profile.id);
 
+    if (details.phone === "") {
+      console.log("empty error");
+      setError(true);
+      return;
+    }
+
+    setError(false);
     await updateDoc(ref, {
       name: details.name,
       phone: details.phone,
@@ -56,14 +64,27 @@ export default function Details() {
               onChange={handleChange}
               value={details.phone}
             />
+            {error && (
+              <p className="text-sm text-red-500">Wrong phone format</p>
+            )}
           </label>
         </div>
-        <button
-          className="bg-my-orange mt-10 cursor-pointer rounded-md p-1 px-4 font-bold text-white"
-          onClick={handleUpdate}
-        >
-          Save details
-        </button>
+        <div className="flex gap-4">
+          <button
+            className="bg-my-orange mt-10 cursor-pointer rounded-md p-1 px-4 font-bold text-white"
+            onClick={handleUpdate}
+          >
+            Save details
+          </button>
+          <button
+            className="bg-my-orange mt-10 cursor-pointer rounded-md p-1 px-4 font-bold text-white"
+            onClick={() => {
+              setEditing(false);
+            }}
+          >
+            Go back
+          </button>
+        </div>
       </div>
     );
   }

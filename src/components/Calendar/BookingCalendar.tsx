@@ -12,9 +12,13 @@ import { Navigate } from "react-router";
 
 interface BookingCalendarProps {
   vanId: string | undefined;
+  hostId: string | undefined;
 }
 
-export default function BookingCalendar({ vanId }: BookingCalendarProps) {
+export default function BookingCalendar({
+  vanId,
+  hostId,
+}: BookingCalendarProps) {
   const { profile } = useAuthContext();
   const [booking, setBooking] = useState(false);
   const [booked, setBooked] = useState(false);
@@ -25,6 +29,7 @@ export default function BookingCalendar({ vanId }: BookingCalendarProps) {
 
   const bookingData = {
     userId: profile.id,
+    hostId: hostId,
     vanId: vanId,
     startDate: range[0].startDate,
     endDate: range[0].endDate,

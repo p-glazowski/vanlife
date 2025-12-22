@@ -9,6 +9,7 @@ import {
   getDocs,
   getFirestore,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
@@ -88,6 +89,21 @@ export async function getRentedVans(id: string) {
   return vans;
 }
 
+export async function getHostedVans(id: string) {
+  if (id === "") {
+    throw new Error("This function needs ID!");
+  }
+
+  const q = query(collection(db, "bookings"), where("hostId", "==", id));
+  const snapshot = await getDocs(q);
+  const vans: BookingFirebase[] = snapshot.docs.map((van) => ({
+    id: van.id,
+    ...(van.data() as Omit<BookingFirebase, "id">),
+  }));
+
+  return vans;
+}
+
 //DATABASE BOOKINGS
 export async function bookVan(details: any) {
   const docRef = collection(db, "bookings");
@@ -105,6 +121,14 @@ export async function cancelBooking(id: any) {
   } catch (err) {
     console.log(err);
   }
+}
+
+export async function updateBookingStatus(
+  bookingId: string,
+  status: "accepted" | "canceled",
+) {
+  const ref = doc(db, "bookings", bookingId);
+  await updateDoc(ref, { status });
 }
 
 //AUTH

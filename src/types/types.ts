@@ -20,6 +20,7 @@ export type UserFirebase = {
 
 export type BookingFirebase = {
   id: string;
+  hostId: string;
   userId: string;
   vanId: string;
   startDate: Timestamp;

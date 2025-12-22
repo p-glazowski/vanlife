@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useBookingsContext } from "../../../providers/BookingsProvider";
 import { useAuthContext } from "../../../providers/AuthProvider";
-import SingleBookedVan from "../../../components/Bookings/SingleBookedVan";
+import SingleBookedVan from "../../../components/Bookings/Renting/SingleBookedVan";
 import { cancelBooking } from "../../../API/Api";
 
 export default function Renting() {
